@@ -7,11 +7,11 @@ import {
   deleteUser,
 } from "../features/userDetailSlice";
 import { toast } from "react-toastify";
+
 const AllPosts = () => {
   const dispatch = useDispatch();
-  const { users, loading, error, userAdded, userUpdated } = useSelector(
-    (state) => state.app
-  );
+  const { users, loading, error } = useSelector((state) => state.app);
+
   const [isModel, setISModal] = useState(false);
   const [formData, setFormData] = useState({
     id: "",
@@ -38,7 +38,7 @@ const AllPosts = () => {
   };
 
   const deleteCurrentUser = (id) => {
-    dispatch(deleteUser( id));
+    dispatch(deleteUser(id));
     toast.success("User deleted successfully!");
   };
 
@@ -78,7 +78,7 @@ const AllPosts = () => {
                 Edit
               </button>
               <button
-                onClick={()=>deleteCurrentUser(user.id)}
+                onClick={() => deleteCurrentUser(user.id)}
                 className=" rounded bg-black text-white px-2 "
               >
                 Delete

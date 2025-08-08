@@ -1,8 +1,11 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { setSearchTerm } from "../features/userDetailSlice";
 
 const Navbar = () => {
-  const navigate = useNavigate();
+
+    const dispatch = useDispatch();
   return (
     <>
       <div className="flex justify-between px-6 mt-6 bg-zinc-300 py-4 ">
@@ -20,11 +23,8 @@ const Navbar = () => {
                 All Posts
               </button>
             </Link>
-            <Link   to={"/createpost"}>
-              <button
-              
-                className="rounded bg-zinc-600 px-4 py-2 text-white hover:bg-zinc-800"
-              >
+            <Link to={"/createpost"}>
+              <button className="rounded bg-zinc-600 px-4 py-2 text-white hover:bg-zinc-800">
                 Create Post
               </button>
             </Link>
@@ -34,6 +34,7 @@ const Navbar = () => {
               className=" bg-white rounded  border border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 outline-none text-black px-20 leading-10 transition-colors duration-200 ease-in-out"
               type="text"
               placeholder="Search Post"
+              onChange={(e)=>dispatch(setSearchTerm(e.target.value))}
             ></input>
           </div>
         </div>

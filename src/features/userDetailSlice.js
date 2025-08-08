@@ -61,16 +61,35 @@ export const userDetail = createSlice({
     name: "userDetail",
     initialState: {
         users: [],
+        allUsers: [],
         loading: false,
         error: null,
         userAdded: false,
-        userUpdated: false
+        userUpdated: false,
+        searchTerm: ""
     },
     reducers: {
         resetFlags: (state) => {
             state.userUpdated = false;
             state.userAdded = false;
         },
+        setSearchTerm: (state, action) => {
+            state.searchTerm = action.payload;
+            const term = action.payload.toLowerCase();
+
+
+            if (term) {
+                // Just mutate the draft array
+                state.users = state.allUsers.filter(
+                    (u) =>
+                        u.name.toLowerCase().includes(term) ||
+                        u.email.toLowerCase().includes(term)
+                );
+            } else {
+                // Restore original list
+                state.users = state.allUsers;
+            }
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -81,6 +100,7 @@ export const userDetail = createSlice({
             .addCase(createuser.fulfilled, (state, action) => {
                 state.loading = false;
                 state.users.push(action.payload);
+                state.allUsers.push(action.payload);
             })
             .addCase(createuser.rejected, (state, action) => {
                 state.loading = false;
@@ -93,6 +113,7 @@ export const userDetail = createSlice({
             .addCase(fetchusers.fulfilled, (state, action) => {
                 state.loading = false;
                 state.users = action.payload;
+                state.allUsers = action.payload;
 
             })
             .addCase(fetchusers.rejected, (state, action) => {
@@ -125,14 +146,16 @@ export const userDetail = createSlice({
             .addCase(deleteUser.fulfilled, (state, action) => {
                 state.loading = false;
                 state.users = state.users.filter((u) => u.id !== action.payload.id)
+                state.users = state.allUsers.filter((u) => u.id !== action.payload.id)
+
             })
-             .addCase(deleteUser.rejected, (state, action) => {
+            .addCase(deleteUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload
             })
     }
 });
 
-export const { resetFlags } = userDetail.actions;
+export const { resetFlags, setSearchTerm } = userDetail.actions;
 
 export default userDetail.reducer;
